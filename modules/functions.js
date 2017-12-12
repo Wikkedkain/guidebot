@@ -127,7 +127,17 @@ module.exports = (client) => {
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   String.prototype.toProperCase = function() {
     return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
+  };
+  
+  // <String>.replaceAll(<searchValue>, <replaceValue) returns a string
+  // with all occurrences of the <searchValue> replaced with <replaceValue>
+  String.prototype.replaceAll = function (searchValue, replaceValue) {
+  	let result = this.toString();
+  	while (result.indexOf(searchValue) > -1) {
+  		result = result.replace(searchValue, replaceValue);
+  	}
+  	return result;
+  }
   
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
