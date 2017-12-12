@@ -42,5 +42,5 @@ exports.help = {
     name: "insult",
     category: "Miscellaneous",
     description: "Insults user(s) mentioned",
-    usage: "insult @username"
+    usage: "\n  insult <@user>\n  insult add <insult>\n  insult empty (admin only)"
 };
