@@ -1,11 +1,14 @@
+const Enmap = require("enmap");
+const EnmapLevel = require("enmap-level");
+let insultsMap;
 
 exports.run = (client, message, args, level) => {
-    const insults = client.insults.get(message.guild.id);
+    const insults = insultsMap.get(message.guild.id) || [];
     
     if(args[0] === "add") { // Add a new insult to the collection
         let insult = args.slice(1).join(" ").replaceAll("\"", "");
         insults.push(insult);
-        client.insults.set(message.guild.id, insults); // put back into the map store
+        insultsMap.set(message.guild.id, insults); // put back into the map store
         return message.reply(`Adding insult "${insult}" to the collection`);
     }
     else if(args[0] === "empty") { // Empty the collection, Administrators only
@@ -17,7 +20,7 @@ exports.run = (client, message, args, level) => {
   This command requires level ${adminLevel} (Administrator)`);
         }
         else {
-            client.insults.set(message.guild.id, []); // empty the insults collection
+            insultsMap.set(message.guild.id, []); // empty the insults collection
             return message.reply("Insult collection has been emptied.");
         }
     }
@@ -36,6 +39,14 @@ exports.conf = {
     guildOnly: true,
     aliases: ["insults"],
     permLevel: "User"
+};
+
+exports.init = async () => {
+  insultsMap = new Enmap({provider: new EnmapLevel({name: "insults"})});
+};
+
+exports.shutdown = async () => {
+  await insultsMap.close();
 };
 
 exports.help = {

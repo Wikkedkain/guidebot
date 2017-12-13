@@ -35,9 +35,6 @@ client.aliases = new Enmap();
 // and makes things extremely easy for this purpose.
 client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
 
-// Create collection for insults as well
-client.insults = new Enmap({provider: new EnmapLevel({name: "insults"})});
-
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
