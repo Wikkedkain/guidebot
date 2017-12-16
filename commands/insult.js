@@ -1,5 +1,5 @@
 const Enmap = require("enmap");
-const EnmapLevel = require("enmap-level");
+const EnmapPostgres = require("../modules/enmap-postgres");
 let insultsMap;
 
 exports.run = (client, message, args, level) => {
@@ -42,7 +42,7 @@ exports.conf = {
 };
 
 exports.init = async () => {
-  insultsMap = new Enmap({provider: new EnmapLevel({name: "insults"})});
+  insultsMap = new Enmap({provider: new EnmapPostgres({name: "insults"})});
 };
 
 exports.shutdown = async () => {
