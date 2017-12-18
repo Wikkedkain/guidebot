@@ -11,6 +11,9 @@ exports.run = (client, message, args, level) => {
         insultsMap.set(message.guild.id, insults); // put back into the map store
         return message.reply(`Adding insult "${insult}" to the collection`);
     }
+    else if (args[0] === "list") {
+        return message.reply('Insults:\n\n' + insults.map((n,i) => {return (i + 1) + '. ' + n}).join("\n"));
+    }
     else if(args[0] === "empty") { // Empty the collection, Administrators only
         const level = client.permlevel(message);
         let adminLevel = client.levelCache["Administrator"];
