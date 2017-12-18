@@ -18,6 +18,7 @@ exports.conf = {
 
 exports.help = {
   name: "embed",
+  category: "Miscellaneous",
   description: "Embeds some text.",
   usage: "> Embed Text"
 };

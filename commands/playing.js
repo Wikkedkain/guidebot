@@ -18,6 +18,7 @@ exports.conf = {
 
 exports.help = {
   name: "playing",
-  description: "Changes the "Playing" status (game).",
+  category: "Miscellaneous",
+  description: "Changes the 'Playing' status (game).",
   usage: "playing <game name>"
 };
