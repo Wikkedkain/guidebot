@@ -13,7 +13,7 @@ exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: ["game"],
-  permLevel: 0
+  permLevel: "Administrator"
 };
 
 exports.help = {

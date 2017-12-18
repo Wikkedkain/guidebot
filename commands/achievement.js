@@ -21,12 +21,13 @@ exports.run = (client, message, args) => {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ["mca"]
+  aliases: ["mca"],
+  permLevel: "User"
 };
 
 exports.help = {
-  name: 'achievement',
+  name: "achievement",
   category: "Miscellaneous",
-  description: 'Send a Minecraft Achievement image to the channel',
-  usage: 'achievement Title|Text (/achievement Achievement Get|Used a Command!)'
+  description: "Send a Minecraft Achievement image to the channel",
+  usage: "achievement Title|Text (/achievement Achievement Get|Used a Command!)"
 };
