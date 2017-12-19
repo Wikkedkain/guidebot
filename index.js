@@ -23,7 +23,7 @@ client.config = require("./config.js");
 // client.config.prefix contains the message prefix
 
 // Require our logger
-client.logger = require("./util/Logger");
+client.logger = require("./util/logger");
 
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
