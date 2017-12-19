@@ -17,7 +17,7 @@ exports.run = (client, message, args) => {
   const url = `https://www.minecraftskinstealer.com/achievement/a.php?i=${rnd}&h=${encodeURIComponent(title)}&t=${encodeURIComponent(contents)}`;
   snekfetch.get(url).then(r=>message.channel.send(users.array().join(", "), {files:[{attachment: r.body}]})).then(() => {
     if(!!message.guild && message.deletable) {
-      message.delete();
+      message.delete().catch(client.logger.error);
     }
   });
 };

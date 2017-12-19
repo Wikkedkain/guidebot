@@ -5,7 +5,7 @@ exports.run = (client, message, args) => {
   client.user.setPresence({ game: { name: game, type: 0 } });
   
   if(!!message.guild) {
-    message.delete().catch(console.error);
+    message.delete().catch(client.logger.error);
   }
 };
 

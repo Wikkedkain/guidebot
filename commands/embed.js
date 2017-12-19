@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 
 exports.run = (client, message, args) => {
   if(!!message.guild) {
-    message.delete().catch(console.error);
+    message.delete().catch(client.logger.error);
   }
   const embed = new Discord.RichEmbed()
     .setDescription(args.join(" "))

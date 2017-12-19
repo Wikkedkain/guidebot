@@ -37,8 +37,8 @@ exports.run = (client, message, args, level) => {
         default : // Send a random insult!
             let users = message.mentions.users;
             
-            if(users.size < 1) return message.reply("You must mention someone to insult them.").catch(console.error);
-            if(insults.length < 1) return message.reply("You must add an insult to the collection before using this command.").catch(console.error);
+            if(users.size < 1) return message.reply("You must mention someone to insult them.");
+            if(insults.length < 1) return message.reply("You must add an insult to the collection before using this command.");
             
             return message.channel.send(users.array().join(', ') + " " + insults.random());
     }
