@@ -37,7 +37,7 @@ exports.run = (client, message, args, level) => {
         default : // Send a random insult!
             let users = message.mentions.users;
             
-            if(users.size < 1) return message.reply("You must mention someone to insult them.");
+            if(users.size < 1) return message.reply(insults.random());
             if(insults.length < 1) return message.reply("You must add an insult to the collection before using this command.");
             
             return message.channel.send(users.array().join(', ') + " " + insults.random());
@@ -62,6 +62,6 @@ exports.shutdown = async () => {
 exports.help = {
     name: "insult",
     category: "Miscellaneous",
-    description: "Insults user(s) mentioned",
-    usage: "\n  insult <@user>\n\n  options:\n 1.-add <insult>\n 2.-list\n 2.-empty (admin only)"
+    description: "Insults user(s) mentioned (or yourself if no users are mentioned)",
+    usage: "\n  insult <@user>\n\n  options:\n 1.-add <insult>\n 2.-list\n 3.-empty (admin only)"
 };

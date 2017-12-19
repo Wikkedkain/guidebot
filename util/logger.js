@@ -4,7 +4,7 @@ Logger class for easy and aesthetically pleasing console logging
 const chalk = require("chalk");
 const moment = require("moment");
 
-exports.log = (type, ...args) => {
+var log = (type, ...args) => {
   const timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]:`;
   const content = args.join(" ");
   
@@ -31,10 +31,12 @@ exports.log = (type, ...args) => {
   }
 };
 
-exports.error = (...args) => this.log("error", ...args);
+exports.log = (...args) => log("log", ...args);
 
-exports.warn = (...args) => this.log("warn", ...args);
+exports.error = (...args) => log("error", ...args);
 
-exports.debug = (...args) => this.log("debug", ...args);
+exports.warn = (...args) => log("warn", ...args);
 
-exports.cmd = (...args) => this.log("cmd", ...args);
+exports.debug = (...args) => log("debug", ...args);
+
+exports.cmd = (...args) => log("cmd", ...args);
