@@ -2,6 +2,10 @@ const Enmap = require("enmap");
 const EnmapPostgres = require("../modules/enmap-postgres");
 let insultsMap;
 
+function isUrl(str) {
+  return str.indexOf('http') > -1;
+}
+
 exports.run = (client, message, args, level) => {
     const insults = insultsMap.get(message.guild.id) || [];
     
@@ -19,6 +23,15 @@ exports.run = (client, message, args, level) => {
             let insult = args.join(" ").replaceAll("\"", "");
             insults.push(insult);
             insultsMap.set(message.guild.id, insults); // put back into the map store
+            
+            if(isUrl(insult)) {
+                let urlInsult = `<${insult}>`;
+                if(message.editable) {
+                  message.edit(message.replace(insult, urlInsult)).catch(client.logger.error);
+                }
+                insult = urlInsult;
+            }
+            
             return message.reply(`Adding insult "${insult}" to the collection`);
         case ("empty") : // Empty the collection
             const level = client.permlevel(message);
@@ -33,7 +46,7 @@ exports.run = (client, message, args, level) => {
                 return message.reply("Insult collection has been emptied.");
             }
         case "list" : // List the current collection
-            return message.reply('Insults:\n\n' + insults.map((n,i) => {return (i + 1) + '. ' + n}).join("\n"));
+            return message.reply('Insults:\n\n' + insults.map((n,i) => {return (i + 1) + '. ' + (isUrl(n) ? `<${n}>` : n)}).join("\n"));
         default : // Send a random insult!
             let users = message.mentions.users;
             
