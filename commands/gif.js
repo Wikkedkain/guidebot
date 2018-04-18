@@ -1,16 +1,32 @@
-const snekfetch = require('snekfetch');
+const snekfetch = require("snekfetch");
 
 exports.run = (client, message, args) => {
   let searchTerms = args.filter((a) => a.indexOf("<@") < 0).join("+");
   
   let users = message.mentions.users;
   
-  client.logger.debug(`'${searchTerms}'`, `${users.array().join(', ')}`);
   let API_KEY = client.config.gifKey;
-  const url = searchTerms.length > 0 ? `http://api.giphy.com/v1/gifs/translate?s=${encodeURIComponent(searchTerms)}&api_key=${API_KEY}` : `http://api.giphy.com/v1/gifs/random?rating=pg-13&api_key=${API_KEY}`;
+  let url = "http://api.giphy.com/v1/gifs/random?rating=r";
   
-  snekfetch.get(url).then((r)=>{
-    message.channel.send(users.array().join(", ") + " " + r.body.data.url);
+  if(searchTerms.length > 0) {
+    if(message.flags.length == 0) message.flags.push('search'); // default to search
+    
+    switch(message.flags[0]) {
+      case ("search"):
+        url = `http://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(searchTerms)}&limit=1`;
+        break;
+      case ("translate"):
+        url = `http://api.giphy.com/v1/gifs/translate?s=${encodeURIComponent(searchTerms)}`;
+        break;
+    }
+  }
+  client.logger.debug(`${url}`, `${users.array().join(', ')}`);
+  
+  snekfetch.get(url + `&api_key=${API_KEY}`).then((r)=>{
+    let data = r.body.data;
+    if(Array.isArray(data)) data = data[0];
+    
+    message.channel.send(users.array().join(", ") + " " + data.url);
   }).then(() => {
     if(!!message.guild && message.deletable) {
       message.delete().catch(client.logger.error);

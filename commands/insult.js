@@ -27,7 +27,7 @@ exports.run = (client, message, args, level) => {
             if(isUrl(insult)) {
                 let urlInsult = `<${insult}>`;
                 if(message.editable) {
-                  message.edit(message.replace(insult, urlInsult)).catch(client.logger.error);
+                  message.edit(message.content.replace(insult, urlInsult)).catch(client.logger.error);
                 }
                 insult = urlInsult;
             }
