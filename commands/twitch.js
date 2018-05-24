@@ -1,5 +1,4 @@
 const snekfetch = require("snekfetch");
-let twitchMap;
 let API_KEY;
 
 async function getUser(username) {
@@ -46,8 +45,6 @@ async function displayStream(client, message, user, query) {
 
 // allow user to search or preview streamers by name
 exports.run = (client, message, args, level) => {
-    const twitchUsers = twitchMap.get(message.author.id) || [];
-    
     let keywords = ["search"];
     for(var i in keywords) {
         if(args[0] === keywords[i]){
@@ -90,10 +87,6 @@ exports.conf = {
     guildOnly: false,
     aliases: ["twitchtv", "twitch.tv"],
     permLevel: "User"
-};
-
-exports.shutdown = async () => {
-    await twitchMap.close();
 };
 
 exports.help = {
