@@ -13,6 +13,9 @@ const config = {
   
   // Giphy API key. https://developers.giphy.com/dashboard/?create=true
   "gifKey": "",
+  
+  // Twitch API key. https://dev.twitch.tv/dashboard/apps/create
+  "twitchKey": "",
 
   // Default per-server settings. New guilds have these settings. 
 
