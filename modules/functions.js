@@ -26,6 +26,25 @@ module.exports = (client) => {
   };
 
   /*
+  GUILD SETTINGS FUNCTION
+
+  This function merges the default settings (from config.defaultSettings) with any
+  guild override you might have for particular guild. If no overrides are present,
+  the default settings are used.
+
+  */
+  client.getGuildSettings = (guild) => {
+    const def = client.config.defaultSettings;
+    if (!guild) return def;
+    const returns = {};
+    const overrides = client.settings.get(guild.id) || {};
+    for (const key in def) {
+      returns[key] = overrides[key] || def[key];
+    }
+    return returns;
+  };
+
+  /*
   SINGLE-LINE AWAITMESSAGE
 
   A simple way to grab a single reply, from the user that initiated
@@ -38,7 +57,7 @@ module.exports = (client) => {
 
   */
   client.awaitReply = async (msg, question, limit = 60000) => {
-    const filter = m=>m.author.id = msg.author.id;
+    const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
       const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
@@ -61,7 +80,7 @@ module.exports = (client) => {
     if (text && text.constructor.name == "Promise")
       text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, {depth: 0});
+      text = require("util").inspect(text, {depth: 1});
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
