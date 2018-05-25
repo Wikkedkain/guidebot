@@ -57,7 +57,7 @@ exports.run = (client, message, args, level) => {
             let chance =  Math.round(Math.random());
             if(chance > 0) {
                 client.logger.debug(`${message.author.username} failed to insult someone else.`);
-                message.reply(insults.random());
+                return message.reply(insults.random());
             }
             
             return message.channel.send(users.array().join(', ') + " " + insults.random());
