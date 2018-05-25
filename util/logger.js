@@ -6,7 +6,7 @@ const moment = require("moment");
 
 var log = (type, ...args) => {
   const timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]:`;
-  const content = args.join(" ");
+  const content = args.map((a) => typeof(a) === 'object' ? JSON.stringify(a) : a).join(" ");
   
   switch (type) {
     case "log": {
