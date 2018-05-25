@@ -34,13 +34,25 @@ async function displayStream(client, message, user, query) {
        let image = stream.thumbnail_url.replace("{width}x{height}", "320x180");
        let viewerCount = stream.viewer_count;
        let title = stream.title;
+       let game = getGame(stream.game_id);
        
-       message.channel.send(`**${name}** is streaming _**${title}**_ for __${viewerCount}__ viewers.\n\n(preview)`).then((message) => {
-           if(message.editable) {
-               message.edit(message.content.replace("(preview)", image)).catch(client.logger.error);
-           }
+       game.then((game) => {
+           let gameName = game == null ? 'Unknown' : game.name;
+           message.channel.send(`**${name}** is playing **${gameName}**\n_**${title}**_ for __${viewerCount}__ viewers.\n\n(preview)`).then((message) => {
+               if(message.editable) {
+                   message.edit(message.content.replace("(preview)", image)).catch(client.logger.error);
+               }
+           });
        });
     });
+}
+async function getGame(gameId) {
+    gameId = encodeURIComponent(gameId);
+    const gameUrl = `https://api.twitch.tv/helix/games?id=${gameId}`;
+    const options = {headers: {"Client-ID": API_KEY}};
+    
+    let response = await snekfetch.get(gameUrl, options);
+    return response.body.data[0] != null ? response.body.data[0] : null;
 }
 
 // allow user to search or preview streamers by name
