@@ -54,8 +54,8 @@ exports.run = (client, message, args, level) => {
             if(insults.length < 1) return message.reply("You must add an insult to the collection before using this command.");
             
             // have a little fun with the caller
-            let chance =  Math.round(Math.random());
-            if(chance > 0) {
+            let chance =  Math.floor(Math.random() * 10) + 1;
+            if(chance <= 1) {
                 client.logger.debug(`${message.author.username} failed to insult someone else.`);
                 return message.reply(insults.random());
             }
