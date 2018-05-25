@@ -34,7 +34,7 @@ exports.run = (client, message, args, level) => {
             
             return message.reply(`Adding insult "${insult}" to the collection`);
         case ("empty") : // Empty the collection
-            const level = client.permlevel(message);
+            const level = message.author.permLevel;
             let adminLevel = client.levelCache["Administrator"];
             if(level < client.levelCache["Administrator"]) {
                 return message.channel.send(`You do not have permission to use this command.
@@ -52,6 +52,13 @@ exports.run = (client, message, args, level) => {
             
             if(users.size < 1) return message.reply(insults.random());
             if(insults.length < 1) return message.reply("You must add an insult to the collection before using this command.");
+            
+            // have a little fun with the caller
+            let chance =  Math.round(Math.random());
+            if(chance > 0) {
+                client.logger.debug(`${message.author.username} failed to insult someone else.`);
+                message.reply(insults.random());
+            }
             
             return message.channel.send(users.array().join(', ') + " " + insults.random());
     }
