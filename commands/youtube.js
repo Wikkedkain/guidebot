@@ -41,7 +41,6 @@ function join(message) {
 }
 
 exports.run = (client, message, args) => {
-    console.log(args);
     if (!queue.hasOwnProperty(message.guild.id)) queue[message.guild.id] = {}, queue[message.guild.id].playing = false;
     
     let keywords = ["join", "leave", "play"];
