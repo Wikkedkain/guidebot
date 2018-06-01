@@ -1,13 +1,16 @@
 const yt = require("ytdl-core");
 let queue = {};
+let connection;
 
 async function play(song, message) {
+    let connected = false;
     if(!message.guild.voiceConnection) {
-      await join(message).catch(message.client.logger.error);
+      connected = await join(message).catch((err) => { message.reply(err); message.client.logger.error(err);});
     }
+    if(!connected) return;
     
     message.channel.sendMessage(`Playing **${song.title}** in **${message.member.voiceChannel.name}**`);
-    let dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes: 1});
+    let dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes: 5});
     queue[message.guild.id].playing = true;
     let collector = message.channel.createMessageCollector(m => m);
     collector.on("collect", m => {
@@ -34,10 +37,9 @@ async function play(song, message) {
 }
 
 function join(message) {
-    const voiceChannel = message.member.voiceChannel;
-    if(!voiceChannel || voiceChannel.type !== "voice") return message.reply("I couldn't connect to your voice channel.");
-    message.client.logger.debug(`${voiceChannel.name}`);
-    return voiceChannel.join();
+    return new Promise((resolve, reject) => {
+        message.member.voiceChannel.join().then((conn) => {connection = conn; resolve(true);}).catch(() => reject(false));
+    });
 }
 
 exports.run = (client, message, args) => {
@@ -61,7 +63,7 @@ exports.run = (client, message, args) => {
             break;
         case ("leave"):
             queue[message.guild.id].playing = false;
-            message.member.voiceChannel.leave();
+            (message.member.voiceChannel || connection.channel).leave();
             break;
         case ("play"):
             if (queue[message.guild.id].playing) return message.channel.sendMessage('Already Playing');
