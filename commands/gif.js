@@ -9,7 +9,7 @@ exports.run = (client, message, args) => {
   let url = "http://api.giphy.com/v1/gifs/random?rating=r";
   
   if(searchTerms.length > 0) {
-    if(message.flags.length == 0) message.flags.push('search'); // default to search
+    if(message.flags.length == 0) message.flags.push("translate"); // default to translate
     
     switch(message.flags[0]) {
       case ("search"):
