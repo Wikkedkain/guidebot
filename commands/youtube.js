@@ -38,6 +38,11 @@ async function play(song, message) {
 
 function join(message) {
     return new Promise((resolve, reject) => {
+        if(message.guild.voiceConnection && message.guild.voiceConnection.channel) {
+            return message.reply(`Already connected to ${message.guild.voiceChannel.name}`);
+        }
+        const voiceChannel = message.member.voiceChannel;
+	    if (!voiceChannel || voiceChannel.type !== 'voice') return message.reply("I couldn't connect to your voice channel...");
         message.member.voiceChannel.join().then((conn) => {connection = conn; resolve(true);}).catch(() => reject(false));
     });
 }
@@ -63,7 +68,11 @@ exports.run = (client, message, args) => {
             break;
         case ("leave"):
             queue[message.guild.id].playing = false;
-            (message.member.voiceChannel || connection.channel).leave();
+            if(!message.guild.voiceConnection) {
+                return message.reply("Not connected to any voice channel.");
+            }
+            
+            message.guild.voiceConnection.channel.leave();
             break;
         case ("play"):
             if (queue[message.guild.id].playing) return message.channel.sendMessage('Already Playing');
@@ -78,14 +87,14 @@ exports.run = (client, message, args) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: ["yt"],
   permLevel: "Bot Admin"
 };
 
 exports.help = {
   name: "youtube",
-  category: "Miscellaneous",
+  category: "Music",
   description: "Play youtube audio in the voice channel by URL or Id",
   usage: "youtube\n\nyoutube play <id>\nyoutube play <url>\nyoutube <url>\n\nFlags:\n-play: Play the url or id specified\n-join: Join user's current voice channel\n-leave: Leave user's current voice channel\n\n*if no flags are specified will default to -play\n"
 };
