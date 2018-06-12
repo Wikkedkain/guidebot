@@ -77,7 +77,6 @@ exports.init = async () => {
 
 exports.shutdown = async () => {
   if(insultsMap != undefined) {
-    console.log(insultsMap);//, JSON.stringify(insultsMap));
     await insultsMap.db.close();
   }
 };
