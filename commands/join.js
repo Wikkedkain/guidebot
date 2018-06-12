@@ -1,13 +1,13 @@
 let connection;
 
 exports.run = (client, message, args) => {
-    if(message.guild.voiceConnection && message.guild.voiceConnection.channel) {
-        return message.reply(`Already connected to ${message.guild.voiceChannel.name}`);
-    }
-    const voiceChannel = message.member.voiceChannel;
+  if(message.guild.voiceConnection && message.guild.voiceConnection.channel) {
+      return message.reply(`Already connected to ${message.guild.voiceChannel.name}`);
+  }
+  const voiceChannel = message.member.voiceChannel;
 	if (!voiceChannel || voiceChannel.type !== 'voice') return message.reply("I couldn't connect to your voice channel...");
-
-    voiceChannel.join().then((conn) => {connection = conn;}).catch(client.logger.error);
+	
+  voiceChannel.join().then((conn) => {connection = conn;}).catch(client.logger.error);
 };
 
 exports.conf = {

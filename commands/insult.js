@@ -84,7 +84,7 @@ exports.shutdown = async () => {
 
 exports.help = {
   name: "insult",
-  category: "Miscellaneous",
+  category: "Fun",
   description: "Insults user(s) mentioned (or yourself if no users are mentioned)",
   usage: "\n  insult <@user>\n\n  options:\n 1.-add <insult>\n 2.-list\n 3.-empty (admin only)"
 };

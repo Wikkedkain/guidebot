@@ -43,7 +43,7 @@ exports.conf = {
 
 exports.help = {
   name: "gif",
-  category: "Miscellaneous",
+  category: "Fun",
   description: "Send a GIF to the channel (optional or text based search)",
   usage: "gif\ngif <text>"
 };
