@@ -2,8 +2,10 @@ const Enmap = require("enmap");
 const EnmapPostgres = require("../modules/enmap-postgres");
 let insultsMap;
 
-function isUrl(str) {
-  return str.indexOf('http') > -1;
+let urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+
+function escapeUrls(str) {
+  return str.replace(urlRegex, (url) => `<${url}>`);
 }
 
 exports.run = (client, message, args, level) => {
@@ -24,13 +26,11 @@ exports.run = (client, message, args, level) => {
         insults.push(insult);
         insultsMap.set(message.guild.id, insults); // put back into the map store
         
-        if(isUrl(insult)) {
-          let urlInsult = `<${insult}>`;
-          if(message.editable) {
-            message.edit(message.content.replace(insult, urlInsult)).catch(client.logger.error);
-          }
-          insult = urlInsult;
+        let urlInsult = escapeUrls(insult);
+        if(message.editable) {
+          message.edit(message.content.replace(insult, urlInsult)).catch(client.logger.error);
         }
+        insult = urlInsult;
         
         return message.reply(`Adding insult "${insult}" to the collection`);
     case ("empty") : // Empty the collection
@@ -46,7 +46,7 @@ exports.run = (client, message, args, level) => {
           return message.reply("Insult collection has been emptied.");
         }
     case "list" : // List the current collection
-        return message.reply('Insults:\n\n' + insults.map((n,i) => {return (i + 1) + '. ' + (isUrl(n) ? `<${n}>` : n)}).join("\n"));
+        return message.reply('Insults:\n\n' + insults.map((n,i) => {return (i + 1) + '. ' + escapeUrls(n)}).join("\n"));
     default : // Send a random insult!
         let users = message.mentions.users;
         
