@@ -1,4 +1,15 @@
 const snekfetch = require("snekfetch");
+const limit = 10;
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+function tryDeleteMessage(client, message) {
+  if(!!message.guild && message.deletable) {
+      message.delete().catch(client.logger.error);
+    }
+}
 
 exports.run = (client, message, args) => {
   let searchTerms = args.filter((a) => a.indexOf("<@") < 0).join("+");
@@ -13,7 +24,7 @@ exports.run = (client, message, args) => {
     
     switch(message.flags[0]) {
       case ("search"):
-        url = `http://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(searchTerms)}&limit=1`;
+        url = `http://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(searchTerms)}&limit=${limit}`;
         break;
       case ("translate"):
         url = `http://api.giphy.com/v1/gifs/translate?s=${encodeURIComponent(searchTerms)}`;
@@ -22,16 +33,27 @@ exports.run = (client, message, args) => {
   }
   client.logger.debug(`${url}`, `${users.array().join(', ')}`);
   
-  snekfetch.get(url + `&api_key=${API_KEY}`).then((r)=>{
-    let data = r.body.data;
-    if(Array.isArray(data)) data = data[0];
-    
-    message.channel.send(users.array().join(", ") + " " + data.url);
-  }).then(() => {
-    if(!!message.guild && message.deletable) {
-      message.delete().catch(client.logger.error);
-    }
-  });
+  snekfetch.get(url + `&api_key=${API_KEY}`)
+    .then((r)=>{
+      let data = r.body.data;
+      client.logger.debug(JSON.stringify(data));
+      if(Array.isArray(data)) {
+        let index = getRandomInt(0, data.length);
+        data = data[index];
+      }
+      let gif = data.images.original.mp4;
+      message.channel.send(users.array().join(", ") + " " + gif)
+        .then(() => {
+          tryDeleteMessage(client, message);
+        });
+    })
+    .catch((err) => {
+      client.logger.error(err);
+      message.reply("Failed to find gif.")
+        .then(() => {
+          tryDeleteMessage(client, message);
+        });
+    });
 };
 
 exports.conf = {
@@ -44,6 +66,6 @@ exports.conf = {
 exports.help = {
   name: "gif",
   category: "Fun",
-  description: "Send a GIF to the channel (optional or text based search)",
-  usage: "gif\ngif <text>"
+  description: "Send a GIF (using Giphy) to the channel (text based search)",
+  usage: "gif\ngif <text>\n\nFlags:\n-translate: Convert words and phrases to GIFs.\n-search: Search for a GIF by text.\n\n*if no flags are specified will default to -translate\n"
 };
