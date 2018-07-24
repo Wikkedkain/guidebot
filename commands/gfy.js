@@ -52,12 +52,14 @@ exports.run = async (client, message, args) => {
     
     switch(message.flags[0]) {
       case ("search"):
-        url = `https://api.gfycat.com/v1/gfycats/search?search_text=${encodeURIComponent(searchTerms)}&gfyCount=${limit}`
+        url = `https://api.gfycat.com/v1/gfycats/search?search_text=${encodeURIComponent(searchTerms)}&gfyCount=${limit}`;
+        break;
       case("tag"):
         url = `https://api.gfycat.com/v1/reactions/populated?tagName=${encodeURIComponent(searchTerms)}&gfyCount=1`;
         break;
       case("sticker"):
         url = `https://api.gfycat.com/v1/stickers/search?search_text=${encodeURIComponent(searchTerms)}&count=1`;
+        break;
     }
   }
   client.logger.debug("Gfy request", `${url}`, `${users.array().join(', ')}`, `${token.access_token}`);
