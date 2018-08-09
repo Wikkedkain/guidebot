@@ -93,7 +93,6 @@ exports.run = async (client, message, args) => {
           users = previous.users;
           url = previous.url;
           options = previous.options;
-          client.logger.debug(`Rerolling <${url}> and message id ${previous.id}`);
         }
         break;
       case ("remove"):
@@ -111,7 +110,6 @@ exports.run = async (client, message, args) => {
   current = {url: url, users: users, options: options};
   tryDeleteMessage(client, message);
   
-  client.logger.debug(`${url}`, `${users.array().join(', ')}`);
   snekfetch.get(url + `&api_key=${API_KEY}`, options)
     .then((r) => {
       let gif;
@@ -132,7 +130,6 @@ exports.run = async (client, message, args) => {
         tryUpdateMessageById(client, message.channel, previous.id, text);
       }
       else {
-        client.logger.debug(text);
         message.channel.send(text)
           .then((newMessage) => {
             current.id = newMessage.id;
@@ -141,7 +138,7 @@ exports.run = async (client, message, args) => {
       }
     })
     .catch((err) => {
-      client.logger.error(err);
+      client.logger.error(url, err);
       message.reply("I failed to find a GIF for you :(");
     });
 };
@@ -159,5 +156,5 @@ exports.help = {
   name: "gif",
   category: "Fun",
   description: "Send a random GIF from Giphy or Gfycat to the channel (text based search or random gif).",
-  usage: "gif\ngif [text]\nsgif [text]\nregif\nrmgif\n\nFlags (shorthand):\n-translate: Convert words and phrases to GIFs.\n-search (sgif): Search for a GIF by text.\n-reroll (regif): Re-roll the last gif command.\n-remove (rmgif): Remove the last gif command.\n\n*if no flags are specified will default to -translate\n"
+  usage: "gif\ngif [text]\ngfy [text]\nsgif [text]\nregif\nrmgif\n\nFlags (shorthand):\n-translate: Convert words and phrases to GIFs.\n-search (sgif): Search for a GIF by text.\n-reroll (regif): Re-roll the last gif command.\n-remove (rmgif): Remove the last gif command.\n\n*if no flags are specified will default to -translate\n"
 };
