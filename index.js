@@ -1,7 +1,7 @@
 // This will check if the node version you are running is the required
 // Node version, if it isn't it will throw the following error to inform
 // you.
-if (process.version.slice(1).split(".")[0] < 8) throw new Error("Node 8.0.0 or higher is required. Update Node on your system.");
+if (Number(process.version.slice(1).split(".")[0]) < 8) throw new Error("Node 8.0.0 or higher is required. Update Node on your system.");
 
 // Load up the discord.js library
 const Discord = require("discord.js");
@@ -9,7 +9,6 @@ const Discord = require("discord.js");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
-//const EnmapLevel = require("enmap-level");
 const EnmapPostgres = require("./modules/enmap-postgres");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
@@ -23,7 +22,7 @@ client.config = require("./config.js");
 // client.config.prefix contains the message prefix
 
 // Require our logger
-client.logger = require("./util/logger");
+client.logger = require("./modules/Logger");
 
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
@@ -59,13 +58,15 @@ const init = async () => {
   client.logger.log(`Loading a total of ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
     const eventName = file.split(".")[0];
+    client.logger.log(`Loading Event: ${eventName}`);
     const event = require(`./events/${file}`);
+    // Bind the client to any event, before the existing arguments
+    // provided by the discord.js event. 
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
-    delete require.cache[require.resolve(`./events/${file}`)];
   });
 
-  // Generate a cache of client permissions for pretty perms
+  // Generate a cache of client permissions for pretty perm names in commands.
   client.levelCache = {};
   for (let i = 0; i < client.config.permLevels.length; i++) {
     const thisLevel = client.config.permLevels[i];

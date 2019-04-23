@@ -33,15 +33,28 @@ module.exports = (client) => {
   the default settings are used.
 
   */
-  client.getGuildSettings = (guild) => {
-    const def = client.config.defaultSettings;
-    if (!guild) return def;
-    const returns = {};
-    const overrides = client.settings.get(guild.id) || {};
-    for (const key in def) {
-      returns[key] = overrides[key] || def[key];
-    }
-    return returns;
+
+  // getSettings merges the client defaults with the guild settings. guild settings in
+  // enmap should only have *unique* overrides that are different from defaults.
+  client.getSettings = (guild) => {
+    if(!guild) return client.settings.get("default");
+    const guildConf = client.settings.get(guild.id) || {};
+    // This "..." thing is the "Spread Operator". It's awesome!
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+    return ({...client.settings.get("default"), ...guildConf});
+  }
+
+    // writeSettings overrides, or adds, any configuration item that is different
+  // than the defaults. This ensures less storage wasted and to detect overrides.
+  client.writeSettings = (id, newSettings) => {
+    const defaults = client.settings.get("default");
+    let settings = client.settings.get(id) || {};
+    // Using the spread operator again, and lodash's "pickby" function to remove any key
+    // from the settings that aren't in the defaults (meaning, they don't belong there)
+    client.settings.set(id, {
+      ..._.pickBy(settings, (v, k) => !_.isNil(defaults[k])),
+      ..._.pickBy(newSettings, (v, k) => !_.isNil(defaults[k]))
+    });
   };
 
   /*
@@ -92,8 +105,8 @@ module.exports = (client) => {
 
   client.loadCommand = (commandName) => {
     try {
+      client.logger.log(`Loading Command: ${commandName}`);
       const props = require(`../commands/${commandName}`);
-      client.logger.log(`Loading Command: ${props.help.name}. 👌`);
       if (props.init) {
         props.init(client);
       }
@@ -119,7 +132,14 @@ module.exports = (client) => {
     if (command.shutdown) {
       await command.shutdown(client);
     }
+    const mod = require.cache[require.resolve(`../commands/${commandName}`)];
     delete require.cache[require.resolve(`../commands/${commandName}.js`)];
+    for (let i = 0; i < mod.parent.children.length; i++) {
+      if (mod.parent.children[i] === mod) {
+        mod.parent.children.splice(i, 1);
+        break;
+      }
+    }
     return false;
   };
 
@@ -129,28 +149,35 @@ module.exports = (client) => {
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
   // are, we feel, very useful in code. 
-  
-  // <String>.toPropercase() returns a proper-cased string such as: 
-  // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-  String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };
+
   
   // <String>.replaceAll(<searchValue>, <replaceValue) returns a string
   // with all occurrences of the <searchValue> replaced with <replaceValue>
-  String.prototype.replaceAll = function (searchValue, replaceValue) {
-  	let result = this.toString();
-  	while (result.indexOf(searchValue) > -1) {
-  		result = result.replace(searchValue, replaceValue);
-  	}
-  	return result;
-  }
+  Object.defineProperty(String.prototype, "replaceAll", {
+    value: function(searchValue, replaceValue) {
+      let result = this.toString();
+      while(result.indexOf(searchValue) > -1) {
+        result = result.replace(searchValue, replaceValue);
+      }
+      return result;
+    }
+  });
   
+  // <String>.toPropercase() returns a proper-cased string such as: 
+  // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
+  Object.defineProperty(String.prototype, "toProperCase", {
+    value: function() {
+      return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    }
+  });
+
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-  Array.prototype.random = function() {
-    return this[Math.floor(Math.random() * this.length)]
-  };
+  Object.defineProperty(Array.prototype, "random", {
+    value: function() {
+      return this[Math.floor(Math.random() * this.length)];
+    }
+  });
 
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
