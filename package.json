@@ -24,12 +24,11 @@
   },
   "homepage": "https://github.com/An-Idiots-Guide/guidebot#readme",
   "dependencies": {
-    "better-sqlite-pool": "^0.1.2",
     "chalk": "^2.3.0",
     "cheerio": "^1.0.0-rc.2",
-    "enmap-level": "^2.0.2",
     "discord.js": "^11.4.2",
     "enmap": "^4.2.1",
+    "enmap-level": "^2.0.2",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
     "node-opus": "^0.3.0",
