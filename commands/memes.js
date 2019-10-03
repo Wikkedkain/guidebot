@@ -25,7 +25,6 @@ exports.run = (client, message, args) => {
       message.reply(`https://imgflip.com/memegenerator/${memeId}`);
       return;
     default:
-      //if(args.join(" ").indexOf("|") < 0) return message.reply("Meme command usage: meme <name> <top text>|<bottom text>.");
       let top, bottom;
       if(args.length > 0) name = args.shift().trim().toLowerCase();
       let rest = args.join(" ").split("|");
