@@ -111,7 +111,7 @@ class EnmapPostgres {
       } finally {
         client.release();
       }
-    })().catch(console.error);
+    })().catch(err => console.error(err));
   }
 
   /**
@@ -148,7 +148,7 @@ class EnmapPostgres {
       } finally {
         client.release();
       }
-    })().catch(console.error);
+    })().catch(err => console.error(err));
   }
 
   bulkDelete() {
@@ -166,7 +166,7 @@ class EnmapPostgres {
       } finally {
         client.release();
       }
-    })().catch(console.error);
+    })().catch(err => console.error(err));
   }
 
   /**

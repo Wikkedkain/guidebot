@@ -30,6 +30,7 @@
     "discord.js": "^11.4.2",
     "enmap": "^4.2.1",
     "enmap-level": "^2.0.2",
+    "imgflipper": "^1.0.1",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
     "node-gyp": "^3.8.0",

@@ -6,7 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 config.json
 config.js
-data/
+data/*
+!data/memes.js
 *test.js
 
 # Runtime data
