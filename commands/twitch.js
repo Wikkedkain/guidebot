@@ -40,11 +40,11 @@ async function displayStream(client, message, user, query) {
       let gameName = game == null ? 'Unknown' : game.name;
       message.channel.send(`**${name}** is playing **${gameName}**\n_**${title}**_ for __${viewerCount}__ viewers.\n\n(preview)`).then((message) => {
         if(message.editable) {
-          message.edit(message.content.replace("(preview)", image)).catch(client.logger.error);
+          message.edit(message.content.replace("(preview)", image)).catch(err => client.logger.error(err));
         }
       });
     });
-  });
+  }).catch(err => client.logger.error(err));
 }
 async function getGame(gameId) {
   gameId = encodeURIComponent(gameId);

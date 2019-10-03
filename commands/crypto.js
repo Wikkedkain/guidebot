@@ -18,7 +18,6 @@ exports.run = (client, message, args, level) => {
     const url = isMulti ? `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${fromSym}&tsyms=${toSym}` : `https://min-api.cryptocompare.com/data/price?fsym=${fromSym}&tsyms=${toSym}`;
     
     snekfetch.get(url).then((r)=>{
-        //client.logger.debug(`Cryptocurrency result: ${JSON.stringify(r.body)}`);
         let pairs = [];
         for(var prop in r.body) {
         	if(r.body.hasOwnProperty(prop)) {
@@ -37,7 +36,7 @@ exports.run = (client, message, args, level) => {
         }
         
         message.channel.send(pairs.join('\n'), {code: "asciidoc", split: { char: "\n" }});
-    });
+    }).catch(err => client.logger.error(err));
 };
 
 exports.conf = {

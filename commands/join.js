@@ -7,7 +7,7 @@ exports.run = (client, message, args) => {
   const voiceChannel = message.member.voiceChannel;
 	if (!voiceChannel || voiceChannel.type !== 'voice') return message.reply("I couldn't connect to your voice channel...");
 	
-  voiceChannel.join().then((conn) => {connection = conn;}).catch(client.logger.error);
+  voiceChannel.join().then((conn) => {connection = conn;}).catch(err => client.logger.error(err));
 };
 
 exports.conf = {

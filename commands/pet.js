@@ -17,13 +17,13 @@ exports.run = (client, message, args, level) => {
   
   if(users.size < 1) return message.channel.send(`\\*${action} ${message.author}*. Good ${pet}.`).then(() => {
     if(!!message.guild && message.deletable) {
-      message.delete().catch(client.logger.error);
+      message.delete().catch(err => client.logger.error(err));
     }
   });
   
   return message.channel.send(`\\*${action} ${users.array().join(', ')}*. Good ${pet}.`).then(() => {
     if(!!message.guild && message.deletable) {
-      message.delete().catch(client.logger.error);
+      message.delete().catch(err => client.logger.error(err));
     }
   });
 };

@@ -30,6 +30,7 @@ async function play(song, message) {
     });
     dispatcher.on("error", (err) => {
         queue[message.guild.id].playing = false;
+        client.logger.error(err);
         return message.channel.sendMessage("error: " + err).then(() => {
             collector.stop();
         });
@@ -63,7 +64,7 @@ exports.run = (client, message, args) => {
     
     switch(message.flags[0]) {
         case ("join"):
-            join(message).catch(client.logger.error);
+            join(message).catch(err => client.logger.error(err));
             
             break;
         case ("leave"):

@@ -31,14 +31,14 @@ async function getAccessToken(client) {
 
 function tryDeleteMessage(client, message) {
   if(!!message.guild && message.deletable) {
-    message.delete().catch(client.logger.error);
+    message.delete().catch(err => client.logger.error(err));
   }
 }
 
 function tryDeleteMessageById(client, channel, messageId) {
   channel.fetchMessage(messageId).then(message => {
     if(message.deletable) {
-      message.delete().catch(client.logger.error);
+      message.delete().catch(err => client.logger.error(err));
     }
   });
 }
@@ -46,7 +46,7 @@ function tryDeleteMessageById(client, channel, messageId) {
 function tryUpdateMessageById(client, channel, messageId, newContent) {
   channel.fetchMessage(messageId).then(message => {
     if(message.editable) {
-      message.edit(newContent).catch(client.logger.error);
+      message.edit(newContent).catch(err => client.logger.error(err));
     }
   });
 }

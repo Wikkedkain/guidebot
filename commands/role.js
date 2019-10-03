@@ -17,7 +17,7 @@ exports.run = (client, message, args, level) => {
       if(role != null && availableRoles.indexOf(role.name) > -1) {
         message.member.addRole(role, `User requested to join role ${role}.`).then(() => {
           message.reply(`You joined role '${role.name}'`);  
-        }).catch(client.logger.error);
+        }).catch(err => client.logger.error(err));
       }
       else {
         message.reply(`Failed to join role '${args[0]}'.`);
@@ -29,7 +29,7 @@ exports.run = (client, message, args, level) => {
       if(role != null && availableRoles.indexOf(role.name) > -1) {
         message.member.removeRole(role, `User requested to leave role ${role}.`).then(() => {
           message.reply(`You left role '${role.name}'`);  
-        }).catch(client.logger.error);
+        }).catch(err => client.logger.error(err));
       }
       else {
         message.reply(`Failed to leave role '${args[0]}'.`);

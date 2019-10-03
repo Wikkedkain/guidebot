@@ -9,7 +9,7 @@ exports.run = (client, message, args, level) => {
     let desc = $("#facts .fact-description").first().text().trim();
     
     message.reply(`Real Fact #${num}: ${desc}`);
-  });
+  }).catch(err => client.logger.error(err));
 };
 
 exports.conf = {
