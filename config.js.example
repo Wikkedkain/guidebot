@@ -19,6 +19,10 @@ const config = {
   
   // Twitch API key. https://dev.twitch.tv/dashboard/apps/create
   "twitchKey": "",
+  
+  // imgflip credentials. https://imgflip.com/
+  "imgFlipUsername": "",
+  "imgFlipPassword": "",
 
   // Default per-server settings. New guilds have these settings. 
 
