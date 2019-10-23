@@ -50,7 +50,7 @@ const init = async () => {
   cmdFiles.forEach(f => {
     if (!f.endsWith(".js")) return;
     const response = client.loadCommand(f);
-    if (response) console.log(response);
+    if (response) client.logger.log(response);
   });
 
   // Then we load events, which will include our message and ready event.

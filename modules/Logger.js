@@ -4,35 +4,39 @@ Logger class for easy and aesthetically pleasing console logging
 const chalk = require("chalk");
 const moment = require("moment");
 
-exports.log = (content, type = "log") => {
+function log(type, ...args) {
   const timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]:`;
   switch (type) {
     case "log": {
-      return console.log(`${timestamp} ${chalk.bgBlue(type.toUpperCase())} ${content} `);
+      return console.log(`${timestamp} ${chalk.bgBlue(type.toUpperCase())} ${args.join(", ")} `);
     }
     case "warn": {
-      return console.log(`${timestamp} ${chalk.black.bgYellow(type.toUpperCase())} ${content} `);
+      return console.log(`${timestamp} ${chalk.black.bgYellow(type.toUpperCase())} ${args.join(", ")} `);
     }
     case "error": {
-      return console.log(`${timestamp} ${chalk.bgRed(type.toUpperCase())} ${content} `);
+      return console.log(`${timestamp} ${chalk.bgRed(type.toUpperCase())} ${args.join(", ")} `);
     }
     case "debug": {
-      return console.log(`${timestamp} ${chalk.green(type.toUpperCase())} ${content} `);
+      return console.log(`${timestamp} ${chalk.green(type.toUpperCase())} ${args.join(", ")} `);
     }
     case "cmd": {
-      return console.log(`${timestamp} ${chalk.black.bgWhite(type.toUpperCase())} ${content}`);
+      return console.log(`${timestamp} ${chalk.black.bgWhite(type.toUpperCase())} ${args.join(", ")}`);
     }
     case "ready": {
-      return console.log(`${timestamp} ${chalk.black.bgGreen(type.toUpperCase())} ${content}`);
+      return console.log(`${timestamp} ${chalk.black.bgGreen(type.toUpperCase())} ${args.join(", ")}`);
     }
     default: throw new TypeError("Logger type must be either warn, debug, log, ready, cmd or error.");
   }
-}; 
+}
 
-exports.error = (...args) => this.log(...args, "error");
+exports.log = (...args) => log("log", ...args);
 
-exports.warn = (...args) => this.log(...args, "warn");
+exports.error = (...args) => log("error", ...args);
 
-exports.debug = (...args) => this.log(...args, "debug");
+exports.warn = (...args) => log("warn", ...args);
 
-exports.cmd = (...args) => this.log(...args, "cmd");
+exports.debug = (...args) => log("debug", ...args);
+
+exports.cmd = (...args) => log("cmd", ...args);
+
+exports.ready = (...args) => log("ready", ...args);
