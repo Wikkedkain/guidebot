@@ -12,7 +12,7 @@ function mockUser(user, message) {
     message.channel.send(`${user} ${mock(user.lastMessage.content)}`);
   } else {
     message.channel.fetchMessages({
-      limit: 20
+      limit: 100
     }).then(messages => {
       let userMessage = messages.filter(m => m.author.id == user.id && m.content.indexOf(message.settings.prefix) !== 0).first();
       
