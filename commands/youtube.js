@@ -5,7 +5,7 @@ let connection;
 async function play(song, message) {
     let connected = false;
     if(!message.guild.voiceConnection) {
-      connected = await join(message).catch((err) => { message.reply(err); message.client.logger.error(err);});
+      connected = await join(message).catch((err) => { message.reply("Failed to join voice."); message.client.logger.error(err);});
     }
     if(!connected) return;
     
@@ -30,7 +30,7 @@ async function play(song, message) {
     });
     dispatcher.on("error", (err) => {
         queue[message.guild.id].playing = false;
-        client.logger.error(err);
+        if(message.client.logger) message.client.logger.error(err);
         return message.channel.sendMessage("error: " + err).then(() => {
             collector.stop();
         });
@@ -44,7 +44,7 @@ function join(message) {
         }
         const voiceChannel = message.member.voiceChannel;
 	    if (!voiceChannel || voiceChannel.type !== 'voice') return message.reply("I couldn't connect to your voice channel...");
-        message.member.voiceChannel.join().then((conn) => {connection = conn; resolve(true);}).catch(() => reject(false));
+        message.member.voiceChannel.join().then((conn) => {connection = conn; resolve(true);}).catch((err) => reject(err));
     });
 }
 
