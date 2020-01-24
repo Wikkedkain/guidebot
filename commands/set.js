@@ -34,7 +34,8 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     if (!client.settings.has(message.guild.id)) client.settings.set(message.guild.id, {});
 
     // Modify the guild overrides directly.
-    client.settings.set(message.guild.id, joinedValue, key);
+    overrides[key] = joinedValue;
+    client.settings.set(message.guild.id, overrides);
 
     // Confirm everything is fine!
     message.reply(`${key} successfully edited to ${joinedValue}`);

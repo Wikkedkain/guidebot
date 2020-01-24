@@ -36,7 +36,7 @@ exports.run = (client, message, args, level) => {
       }
       break;
     default:
-      return message.reply(`You must indicate a flag to use this command. See ${client.settings.prefix}help for more information.`);
+      return message.reply(`You must indicate a flag to use this command. See ${client.config.prefix}help for more information.`);
   }
 };
 

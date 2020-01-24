@@ -35,7 +35,7 @@
     "moment-duration-format": "^2.2.0",
     "node-gyp": "^3.8.0",
     "node-opus": "^0.3.0",
-    "pg": "7.4.0",
+    "pg": "^7.4.0",
     "snekfetch": "^3.6.1",
     "ytdl-core": "^0.20.4"
   }
