@@ -9,31 +9,31 @@ async function play(song, message) {
     }
     if(!connected) return;
     
-    message.channel.sendMessage(`Playing **${song.title}** in **${message.member.voiceChannel.name}**`);
+    message.channel.send(`Playing **${song.title}** in *${message.member.voiceChannel.name}*\n\nYou may **-pause** or **-stop** the music at any time.`);
     let dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes: 5});
     queue[message.guild.id].playing = true;
     let collector = message.channel.createMessageCollector(m => m);
     collector.on("collect", m => {
         if(m.content.startsWith(message.settings.prefix + "pause")) {
-            message.channel.sendMessage("paused").then(() => {dispatcher.pause();});
+            message.channel.send("Paused. You may resume with **-resume**").then(() => {dispatcher.pause();});
         }
-        if(m.content.startsWith(message.settings.prefix + "resume")) {
-            message.channel.sendMessage("resumed").then(() => {dispatcher.resume();});
+        if(m.content.startsWith(message.settings.prefix + "resume") || m.content.startsWith(message.settings.prefix + "play")) {
+            message.channel.send("Resuming.").then(() => {dispatcher.resume();});
         }
         if(m.content.startsWith(message.settings.prefix + "stop")) {
-            message.channel.sendMessage("stopped").then(() => {dispatcher.end();});
+            message.channel.send("Stopped.").then(() => {dispatcher.end();});
         }
     });
-    dispatcher.on("end", () => {
+    function cleanUp() {
         queue[message.guild.id].playing = false;
         collector.stop();
-    });
+        message.guild.voiceConnection.disconnect();
+    }
+    dispatcher.on("end", cleanUp);
     dispatcher.on("error", (err) => {
-        queue[message.guild.id].playing = false;
+        cleanUp();
         if(message.client.logger) message.client.logger.error(err);
-        return message.channel.sendMessage("error: " + err).then(() => {
-            collector.stop();
-        });
+        message.channel.send("error: " + err);
     });
 }
 
@@ -76,10 +76,10 @@ exports.run = (client, message, args) => {
             message.guild.voiceConnection.channel.leave();
             break;
         case ("play"):
-            if (queue[message.guild.id].playing) return message.channel.sendMessage('Already Playing');
+            if (queue[message.guild.id].playing) return message.channel.send('Already Playing');
 
             yt.getInfo(url, (err, info) => {
-               if(err) return message.channel.sendMessage("Invalid YouTube Link: " + err);
+               if(err) return message.channel.send("Invalid YouTube Link: " + err);
                play({url:url, title: info.title, requester: message.author.username}, message);
             });
             break;

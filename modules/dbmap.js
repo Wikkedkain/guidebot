@@ -43,7 +43,7 @@ class DbMap extends Map {
         console.log(`Loaded ${data.rows.length} rows from Table: ${this.name}.`);
       } else {
         let sql = `
-        CREATE TABLE '${this.name}'
+        CREATE TABLE ${this.name}
         (
           id varchar(100),
           data text,
