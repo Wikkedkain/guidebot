@@ -90,7 +90,7 @@ exports.conf = {
   enabled: true,
   guildOnly: true,
   aliases: ["yt"],
-  permLevel: "Bot Admin"
+  permLevel: "Bot Support"
 };
 
 exports.help = {
