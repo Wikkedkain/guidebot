@@ -1,10 +1,9 @@
+const MusicPlayer = require("../modules/MusicPlayer");
 
 exports.run = (client, message, args) => {
-  if(!message.guild.voiceConnection) {
-    return message.reply("Not connected to any voice channel.");
-  }
+  let musicPlayer = MusicPlayer.getInstance(message.guild, client.logger);
   
-  message.guild.voiceConnection.channel.leave();
+  musicPlayer.leave();
 };
 
 exports.conf = {
@@ -17,6 +16,6 @@ exports.conf = {
 exports.help = {
   name: "leave",
   category: "Music",
-  description: "Leave the current voice channel. Bot must be currently in a voice channel.",
+  description: "Leave the current voice channel.",
   usage: "leave"
 };

@@ -3,7 +3,7 @@ const MusicPlayer = require("../modules/MusicPlayer");
 exports.run = (client, message, args) => {
   let musicPlayer = MusicPlayer.getInstance(message.guild, client.logger);
   
-  musicPlayer.join(message.member.voiceChannel.id);
+  musicPlayer.pause();
 };
 
 exports.conf = {
@@ -14,8 +14,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "join",
+  name: "pause",
   category: "Music",
-  description: "Join the user's voice channel. User must be in a voice channel.",
-  usage: "join"
+  description: "Pause the music.",
+  usage: "pause"
 };

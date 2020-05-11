@@ -3,7 +3,7 @@ const MusicPlayer = require("../modules/MusicPlayer");
 exports.run = (client, message, args) => {
   let musicPlayer = MusicPlayer.getInstance(message.guild, client.logger);
   
-  musicPlayer.join(message.member.voiceChannel.id);
+  musicPlayer.skipSong();
 };
 
 exports.conf = {
@@ -14,8 +14,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "join",
+  name: "skip",
   category: "Music",
-  description: "Join the user's voice channel. User must be in a voice channel.",
-  usage: "join"
+  description: "Skip the current song in the queue.",
+  usage: "skip"
 };
