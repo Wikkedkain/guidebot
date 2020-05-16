@@ -35,8 +35,8 @@ class MusicPlayer {
       this.guild.voiceConnection.channel.leave();
     }
   }
-  async playSong(song) {
-  	this.stream = this.guild.voiceConnection.playOpusStream(await ytdl(song));
+  async playSong(url) {
+  	this.stream = this.guild.voiceConnection.playOpusStream(await ytdl(url));
   	this.stream.on("end", () => {
   	  this.logger.debug("Song ended");
   	});
@@ -55,7 +55,7 @@ class MusicPlayer {
       if(!song) {
         throw new Error("Failed to play music. No songs in the queue.");
       }
-      this.playSong(song);
+      this.playSong(song.url);
     }
   }
   pause() {
@@ -66,14 +66,25 @@ class MusicPlayer {
   stop() {
     this.guild.voiceConnection.disconnect();
   }
-  addSong( url) {
+  addSong(url) {
     this.queue.push(url);
+  }
+  addSongs(urls) {
+    for(let i=0;i<urls.length;i++) {
+      this.addSong(urls[i]);
+    }
   }
   skipSong() {
     if(this.isPlaying()) {
       this.stream.end();
       this.play();
     }
+  }
+  emptyQueue() {
+    this.queue = [];
+  }
+  getQueue() {
+    return this.queue;
   }
 }
 
@@ -83,7 +94,7 @@ module.exports = {
     
     return function(guild, logger) {
       if (instances[guild.id] == undefined) {
-          instances[guild.id] = new MusicPlayer(guild, logger);
+        instances[guild.id] = new MusicPlayer(guild, logger);
       }
       return instances[guild.id];
     };

@@ -1,12 +1,6 @@
 const DbMap = require("../modules/dbmap");
 let insultsMap;
 
-let urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-
-function escapeUrls(str) {
-  return str.replace(urlRegex, (url) => `<${url}>`);
-}
-
 function saveInsults(id, insults) {
   insultsMap.set(id, insults);
 }
@@ -42,7 +36,7 @@ exports.run = async (client, message, args, level) => {
         saveInsults(id, insults);
         
         // escape original message?
-        let urlInsult = escapeUrls(insult);
+        let urlInsult = insult.escapeUrl();
         if(message.editable) {
           message.edit(message.content.replace(insult, urlInsult)).catch(err => client.logger.error(err));
         }

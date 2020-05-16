@@ -170,6 +170,18 @@ module.exports = (client) => {
       return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
   });
+  
+  const urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+  Object.defineProperty(String.prototype, "isUrl", {
+    value: function() {
+      return urlRegex.test(this);
+    }
+  });
+  Object.defineProperty(String.prototype, "escapeUrl", {
+    value: function() {
+      return this.replace(urlRegex, (url) => `<${url}>`);
+    }
+  });
 
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.

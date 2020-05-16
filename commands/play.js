@@ -23,7 +23,7 @@ exports.run = async (client, message, [songUrl, ...args]) => {
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: [""],
+  aliases: ["resume"],
   permLevel: "Bot Support"
 };
 
