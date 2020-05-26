@@ -3,10 +3,9 @@ const ytdl = require('ytdl-core-discord');
 // todo:
 // song info, communication to user when using the new commands
 // queue related info or commands? (peek, clear, etc..)
-// seek command
 // may want to update discord to stable v12?
 // proceed to web portion?
-// or work on playlist feature and give ability to load songs from playlist?
+// playlist commands works, may want to refactor
 
 class MusicPlayer {
   constructor(guild, logger) {
@@ -55,6 +54,9 @@ class MusicPlayer {
       if(!song) {
         throw new Error("Failed to play music. No songs in the queue.");
       }
+      if(typeof this.songChangeCallback == 'function') {
+        this.songChangeCallback(song);
+      }
       this.playSong(song.url);
     }
   }
@@ -66,12 +68,15 @@ class MusicPlayer {
   stop() {
     this.guild.voiceConnection.disconnect();
   }
-  addSong(url) {
-    this.queue.push(url);
+  addSong(song) {
+    if(typeof song === 'string') {
+      song = { url: song, title: 'unknown' };
+    }
+    this.queue.push(song);
   }
-  addSongs(urls) {
-    for(let i=0;i<urls.length;i++) {
-      this.addSong(urls[i]);
+  addSongs(songs) {
+    for(let i=0;i<songs.length;i++) {
+      this.addSong(songs[i]);
     }
   }
   skipSong() {
@@ -85,6 +90,9 @@ class MusicPlayer {
   }
   getQueue() {
     return this.queue;
+  }
+  onSongChange(callback) {
+    this.songChangeCallback = callback;
   }
 }
 

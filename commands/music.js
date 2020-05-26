@@ -1,3 +1,4 @@
+const yt = require("ytdl-core");
 const MusicPlayer = require("../modules/MusicPlayer");
 const DbMap = require("../modules/dbmap");
 let playlistMap;
@@ -13,7 +14,21 @@ function getSongsFromPlaylist(id, playlistName) {
     return playlist.songs;
 }
 
-exports.run = (client, message, [action, ...args]) => {
+
+async function loadSongInfo(url) {
+  try {
+    let info = await yt.getInfo(url);
+    return { url: url, title: info.title };
+  }
+  catch(err) {
+    return { url: url, title: 'unknown' };
+  }
+}
+
+function onSongChange(song) {
+}
+
+exports.run = (client, message, [action, songOrPlaylist]) => {
   let musicPlayer = MusicPlayer.getInstance(message.guild, client.logger);
   
   switch(action) {
@@ -34,7 +49,10 @@ exports.run = (client, message, [action, ...args]) => {
     case "leave":
       return musicPlayer.leave();
     case "add":
-      return musicPlayer.addSong(args[0]);
+      loadSongInfo(songOrPlaylist).then(song => {
+        musicPlayer.addSong(song);
+      });
+      return
     case "skip":
       return musicPlayer.skipSong();
     case "empty":
@@ -46,7 +64,7 @@ exports.run = (client, message, [action, ...args]) => {
       let reply = `Songs:\n\n${printedQueue.join('\n')}`;
       return message.reply(reply);
     case "load":
-      let songs = getSongsFromPlaylist(message.member.id, args[0]);
+      let songs = getSongsFromPlaylist(message.member.id, songOrPlaylist);
       
       musicPlayer.addSongs(songs);
       return;
