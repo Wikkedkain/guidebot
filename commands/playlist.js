@@ -196,6 +196,7 @@ exports.help = {
     `
     playlist create <name>             : Create a playlist.
     playlist view <name>               : View songs in the playlist.
+    playlist list                      : List all of your playlists.
     playlist delete <name>             : Delete the playlist.
     playlist edit <name> add <url>     : Add a song to the playlist.
     playlist edit <name> remove <url>  : Remove a song from the playlist.
