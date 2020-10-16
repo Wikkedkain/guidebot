@@ -6,7 +6,7 @@ function saveInsults(id, insults) {
 }
 
 function getInsults(id) {
-  return insultsMap.get(id);
+  return insultsMap.get(id) || [];
 }
 
 function parseFlags(message, args) {
@@ -56,7 +56,7 @@ exports.run = async (client, message, args, level) => {
           return message.reply("Insult collection has been emptied.");
         }
     case "list" : // List the current collection
-        return message.reply("Insults:\n\n" + insults.map((n,i) => {return (i + 1) + ". " + escapeUrls(n)}).join("\n"));
+        return message.reply("Insults:\n\n" + insults.map((n,i) => {return (i + 1) + ". " + n.escapeUrl()}).join("\n"));
     default : // Send a random insult!
         if(insults.length < 1) return message.reply("You must add an insult to the collection before using this command.");
         let users = message.mentions.users;
