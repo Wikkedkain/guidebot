@@ -50,6 +50,8 @@ class DbMap extends Map {
           CONSTRAINT ${this.name}_id_unique UNIQUE (id)
         );`;
         await db.query(sql);
+        
+        console.log(`Created new Table: ${this.name}.`);
       }
       this.dbReady = true;
     }
