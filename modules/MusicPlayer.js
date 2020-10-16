@@ -20,7 +20,7 @@ class MusicPlayer {
   }
   
   isVoiceConnected() {
-    return this.guild.voiceConnection && this.guild.voiceConnection.channel;
+    return !!this.guild.voiceConnection && !!this.guild.voiceConnection.channel;
   }
   
   join(voiceChannelId) {
