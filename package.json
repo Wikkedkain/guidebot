@@ -34,10 +34,13 @@
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
     "node-gyp": "^3.8.0",
-    "node-opus": "^0.3.0",
-    "pg": "^7.17.1",
+    "node-opus": "^0.3.3",
+    "pg": "^7.18.2",
     "snekfetch": "^3.6.1",
-    "ytdl-core": "^1.0.7",
-    "ytdl-core-discord": "^1.2.0"
+    "ytdl-core": "^1.0.9",
+    "ytdl-core-discord": "^1.2.3"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
   }
 }
