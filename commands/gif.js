@@ -2,33 +2,6 @@ const snekfetch = require("snekfetch");
 let token = {};
 const limit = 10;
 
-async function getAccessToken(client) {
-  let CLIENT_ID = client.config.gfycatSecrets.client_id;
-  let CLIENT_SECRET = client.config.gfycatSecrets.client_secret;
-  
-  if(token.access_token != null) {
-    let expireDate = new Date(token.time);
-    expireDate.setSeconds(token.time.getSeconds() + token.expires_in);
-    
-    if(Date.parse(new Date()) > Date.parse(expireDate)) {
-      client.logger.debug(`Gfy access token expired.`);
-  	  token = {};
-    }
-  }
-  
-  if (token.access_token == null) {
-    await snekfetch.post("https://api.gfycat.com/v1/oauth/token")
-      .send({ grant_type: "client_credentials", client_id: CLIENT_ID, client_secret: CLIENT_SECRET })
-      .then((r) => {
-        token.token_type = r.body.token_type;
-        token.expires_in = r.body.expires_in;
-        token.access_token = r.body.access_token;
-        token.time = new Date();
-        client.logger.debug('Access token granted for gfy!');
-      });
-  }
-}
-
 function tryDeleteMessage(client, message) {
   if(!!message.guild && message.deletable) {
     message.delete().catch(err => client.logger.error(err));
@@ -66,27 +39,16 @@ exports.run = async (client, message, args) => {
   let users = message.mentions.users;
   
   let API_KEY = client.config.gifKey;
-  let url = "http://api.giphy.com/v1/gifs/random?rating=r";
+  let url = `https://api.tenor.com/v1/search?q=${encodeURIComponent(searchTerms)}&key=${API_KEY}&contentfilter=low&media_filter=minimal&limit=${limit}`;
   let options = {headers:{}};
   
   if(message.content.indexOf("rmgif") > -1) message.flags.push("remove");
-  if(message.content.indexOf("gfy") > -1) message.flags.push("gfycat");
   if(message.content.indexOf("reroll") > -1 || message.content.indexOf("regif") > -1) message.flags.push("reroll");
-  if(message.content.indexOf("sgif") > -1) message.flags.push("search");
   
   if(searchTerms.length > 0 || message.flags.length > 0) {
-    if(message.flags.length == 0) message.flags.push("translate"); // default to translate
+    if(message.flags.length == 0) message.flags.push("search"); // default to search
     
     switch(message.flags[0]) {
-      case ("gfycat"):
-        url = `https://api.gfycat.com/v1/gfycats/search?search_text=${searchTerms}&gfyCount=${limit}`;
-        break;
-      case ("search"):
-        url = `http://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(searchTerms)}&limit=${limit}`;
-        break;
-      case ("translate"):
-        url = `http://api.giphy.com/v1/gifs/translate?s=${encodeURIComponent(searchTerms)}`;
-        break;
       case ("reroll"):
         previous = getLastCommand(message.author.id);
         if (previous != null) {
@@ -101,29 +63,17 @@ exports.run = async (client, message, args) => {
         tryDeleteMessageById(client, message.channel, previous.id);
         saveLastCommand(message.author.id, null);
         return;
+      default: // search fall through
+        break;
     }
   }
-  if(url.indexOf("gfycat") > -1) {
-    await getAccessToken(client);
-    options.headers.Authorization = "Bearer " + token.access_token;
-  }
+
   current = {url: url, users: users, options: options};
   tryDeleteMessage(client, message);
   
-  snekfetch.get(url + `&api_key=${API_KEY}`, options)
+  snekfetch.get(url, options)
     .then((r) => {
-      let gif;
-      if(url.indexOf("gfycat") > -1) {
-        gif = r.body.gfycats.random().mp4Url;
-      }
-      else {
-        let data = r.body.data;
-      
-        if(Array.isArray(data)) {
-          data = data.random();
-        }
-        gif = data.images.original.mp4;
-      }
+      let gif = r.body.results.random().media[0]['gif'].url;
       
       let text = `${users.array().join(", ")} ${gif}`;
       if(previous != null) {
@@ -148,13 +98,13 @@ exports.previous = {};
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ["giphy","gifs", "sgif","gfy", "regif", "rmgif"],
+  aliases: ["giphy","gifs", "regif", "rmgif"],
   permLevel: "User"
 };
 
 exports.help = {
   name: "gif",
   category: "Fun",
-  description: "Send a random GIF from Giphy or Gfycat to the channel (text based search or random gif).",
-  usage: "gif\ngif [text]\ngfy [text]\nsgif [text]\nregif\nrmgif\n\nFlags (shorthand):\n-translate: Convert words and phrases to GIFs.\n-search (sgif): Search for a GIF by text.\n-reroll (regif): Re-roll the last gif command.\n-remove (rmgif): Remove the last gif command.\n\n*if no flags are specified will default to -translate\n"
+  description: "Send a random GIF from Tenor to the channel (text based search or random gif).",
+  usage: "gif\ngif [text]\nregif\nrmgif\n\nFlags (shorthand):\n-reroll (regif): Re-roll the last gif command.\n-remove (rmgif): Remove the last gif command."
 };
