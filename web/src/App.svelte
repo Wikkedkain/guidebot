@@ -1,6 +1,7 @@
 <script>
   import { Router, Link, Route } from "svelte-routing";
   import Home from "./routes/Home.svelte";
+  import NavLink from './components/NavLink.svelte';
   import Commands from './routes/Commands.svelte';
   import Command from './components/Command.svelte';
 
@@ -8,11 +9,11 @@
 </script>
 
 <Router url="{url}">
-  <nav>
-    <Link to="/">Home</Link>
-    <Link to="commands">Commands</Link>
+  <nav class="bg-indigo-700 mx-auto p-4 h-16">
+    <NavLink to="/">Home</NavLink>
+    <NavLink to="commands">Commands</NavLink>
   </nav>
-  <div>
+  <div class="mt-4">
     <Route path="commands/*" component="{Commands}" />
     
     <Route path="/">

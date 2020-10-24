@@ -17,15 +17,17 @@
 </script>
 
 <Router>
-    <h1>Commands</h1>
-    {#if commands != null}
-        {#each commands as command}
-        <Route path="{command.help.name}" component={Command} command={command} />
-        {/each}
-        <ul>
+    <main class="container">
+        <h1 class="text-2xl font-bold text-indigo-900">Commands</h1>
+        {#if commands != null}
             {#each commands as command}
-            <li><Link to="{command.help.name}">{command.help.name}</Link></li>
+            <Route path="{command.help.name}" component={Command} command={command} />
             {/each}
-        </ul>
-    {/if}
+            <ul>
+                {#each commands as command}
+                <li><Link to="{command.help.name}">{command.help.name}</Link></li>
+                {/each}
+            </ul>
+        {/if}
+    </main>
 </Router>
