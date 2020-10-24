@@ -15,7 +15,7 @@ const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
 const DbMap = require("./modules/dbmap");
-const Web = require ("./web");
+const Web = require ("./modules/web");
 
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
@@ -83,7 +83,7 @@ const init = async () => {
   client.login(client.config.token);
   
   // Start up our web server
-  //Web.init();
+  Web.init();
 
 // End top-level async/await function.
 };

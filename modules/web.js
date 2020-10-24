@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
+const path = require('path');
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
-const logger = require("./modules/Logger");
-const http = require("http");
+const logger = require("./Logger");
 
 // set the port of our application
 // process.env.PORT lets the port be set by Heroku
@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 
 const getCommand = (commandName) => {
     try {
-      return require(`./commands/${commandName}`);
+      return require(`../commands/${commandName}`);
     } catch(e) {
       logger.log(`Unable to load Help for Command: ${commandName} ${e}`);
       return false;
@@ -41,25 +41,25 @@ const getCommands = async () => {
 
 const init = async () => {
     // make express look in the `public` directory for assets (css/js/img)
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(process.cwd() + '/public'));
     
     let commands = await getCommands();
     // commands api
-    app.get('/commands', (request, response) => {
+    app.get('/api/commands', (request, response) => {
         response.send(commands);
+    });
+
+    // SPA - no SSR
+    app.get('/*', (request, response) => {
+        response.sendFile(path.resolve(process.cwd(), 'public/index.html'));
     });
     
     // start listening
     app.listen(port, () => {
         logger.log('Our app is running on http://localhost:' + port);
     });
-    
-    if(process.env.HEROKU_WEB_URL != null) {
-        // phone home every 20 minutes to avoid heroku timeout
-        setInterval(() => {
-            http.get(process.env.HEROKU_WEB_URL);
-          }, 1200000);
-    }
 };
 
-init();
+module.exports = {
+  init: init,
+};
