@@ -13,11 +13,12 @@
     <NavLink to="/">Home</NavLink>
     <NavLink to="commands">Commands</NavLink>
   </nav>
-  <div class="mt-4">
+  
+  <main class="container mt-4">  
     <Route path="commands/*" component="{Commands}" />
     
     <Route path="/">
       <Home name="world" />
     </Route>
-  </div>
+  </main>
 </Router>
