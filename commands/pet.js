@@ -39,5 +39,5 @@ exports.help = {
   name: "pet",
   category: "Fun",
   description: "Pets the user(s) mentioned (or yourself if no users are mentioned)",
-  usage: "\n  pet <@user>"
+  usage: "pet <@user>"
 };

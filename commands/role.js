@@ -52,5 +52,5 @@ exports.help = {
   category: "Moderation",
   description: "Users can join/leave available roles.",
   tags: ["join", "leave"],
-  usage: "\n  role <options> <rolename>\n\n  options:\n 1.-join <rolename>\n 2.-leave <rolename>\n\nAvailable roles: nsfw"
+  usage: "role <options> <rolename>\n\nOptions:\n 1.-join <rolename>\n 2.-leave <rolename>\n\nAvailable roles: nsfw"
 };
