@@ -2,6 +2,24 @@ import { writable } from 'svelte/store';
 
 export const commandStore = writable([]);
 
+export const cookies = (function() {
+    function getCookies() {
+        let entries = document.cookie.split(';').map((e) => e.trim());
+        return entries.reduce((result, entry) => {
+            let parts = entry.split('=');
+            result[parts[0]] = parts[1];
+            return result;
+        }, {});
+    }
+
+    return {
+        get: function(name) {
+            let cookieMap = getCookies();
+            return cookieMap[name];
+        }
+    }
+})();
+
 export const localCache = function(key) {
     function dateDiffDays(fromDate, toDate) {
         return Math.floor((toDate - fromDate) / (1000*60*60*24));
@@ -21,7 +39,7 @@ export const localCache = function(key) {
         },
         get: function() {
             if (typeof(localStorage) != 'undefined') {
-                let cache = JSON.parse(localStorage.getItem(key) || null);
+                let cache = JSON.parse(localStorage.getItem(key) || '{}');
                 if(isCacheExpired(cache)) {
                     localStorage.setItem(key, null);
                     return null;
