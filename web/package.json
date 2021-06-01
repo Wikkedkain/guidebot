@@ -1,9 +1,9 @@
 {
-  "name": "svelte-app",
+  "name": "BatBotDashboard",
   "version": "1.0.0",
   "scripts": {
     "watch:tailwind": "postcss css/tailwind.css -o ../public/build/bundle.css -w",
-    "build:tailwind": "SET NODE_ENV=production&& postcss css/tailwind.css -o ../public/build/bundle.css",
+    "build:tailwind": "postcss css/tailwind.css -o ../public/build/bundle.css",
     "build": "npm run build:tailwind && rollup -c",
     "dev": "rollup -c -w"
   },
