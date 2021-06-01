@@ -4,9 +4,11 @@ const pool = createPool();
 
 function createPool() {
   if (process.env.DATABASE_URL != undefined) {
-    let ssl = process.env.NODE_ENV == 'production' ? '?ssl=require' : '';
     return new Pool({
-      connectionString: process.env.DATABASE_URL + ssl,
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     });
   }
   return new Pool();
