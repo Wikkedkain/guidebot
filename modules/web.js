@@ -7,8 +7,8 @@ const session = require('express-session');
 const DiscordOauth2 = require('discord-oauth2');
 const redirectUri = process.env.NODE_ENV == 'production' ? process.env.HEROKU_WEB_URL : 'http://localhost:5000/';
 const oauth = new DiscordOauth2({
-  clientId: '180922528338804736',
-  clientSecret: 'F98td93I1GyznSrZitnIjtvIWKz7id27',
+  clientId: process.env.DISCORD_CLIENT_ID,
+  clientSecret: process.env.DISCORD_CLIENT_SECRET,
   redirectUri: redirectUri + 'servers',
 });
 const app = express();
